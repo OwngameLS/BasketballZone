@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/uiscript.js"></script>
+		<script src="js/utils.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript" charset="UTF-8">
+			mui.init();
+			mui.plusReady(function() {
+				$("#gameon")[0].addEventListener("tap", function() {
+					openWindow("gamesettings.html", "gamesettings");
+				});
+				$("#me")[0].addEventListener("tap", function() {
+//					var tempStr = '{"statOptions":{"isNeed24s":false,"isNeedOvertime":false,"isNeedRate":false,"isFreeThrow":false,"isNeedPersonal":false},"gameRules":{"type":"fiba","totalSections":4,"timePerSection":10,"timeOvertime":5,"playersOnCourt":5,"foulOutCount":6},"teamInfos":{"teamNameHome":"主队","teamCodeHome":"NULL","playerCountsHome":"8","teamNameGuest":"客队","teamCodeGuest":"NULL","playerCountsGuest":"8"	},"playersInfos":{"Home":[],"Guest":[]}}';
+////					writeFile(plus.io.PUBLIC_DOCUMENTS,"statSettings/defaultsettings.txt",tempStr);// 这里以后要加入文件夹的写入
+////					readFileContent(plus.io.PUBLIC_DOCUMENTS, "statSettings/defaultsettings.txt");
+//					writeFile(plus.io.PUBLIC_DOCUMENTS,"defaultsettings.txt",tempStr);
+//					readFileContent(plus.io.PUBLIC_DOCUMENTS, "defaultsettings.txt");
+//					convertJsonStr("");
+				});
+				$("#leagueMatch")[0].addEventListener("tap", function() {
+					var statSettings = '{"statOptions":{"isNeed24s":true,"isNeedOvertime":false,"isNeedRate":true,"isFreeThrow":false,"isNeedPersonal":true},"gameRules":{"type":"fiba","totalSections":4,"timePerSection":10,"timeOvertime":5,"playersOnCourt":5,"foulOutCount":6,"timeOutCount":10},"teamInfos":{"teamNameHome":"主队","teamCodeHome":"NULL","playerCountsHome":"8","teamNameGuest":"客队","teamCodeGuest":"NULL","playerCountsGuest":"8"	},"playersInfos":{"home":[{"code":"x","no":1,"name":"owngame"},{"code":"x","no":2,"name":"owngame2"},{"code":"x","no":3,"name":"owngame3"}],"guest":[]}}';
+					myStorageHandler_setItem("lastSettings", statSettings);
+				});
+				$("#nearbyGame")[0].addEventListener("tap", function() {
+					myStorageHandler_getItem("lastSettings");
+				});
+				
+			});
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" style="background: #EC971F;">
+			<h1 class="mui-title" style="margin-top: 2px;"><img height="35px" width="35px" src="img/icons/basketball.png" />篮球天下</h1>
+		</header>
+		<div class="mui-bar mui-bar-tab" style="height:20px;line-height:20px;font-size:10px;text-align:center;">
+			版权所有-龙生(Owngame)|私人出品
+			<br> 交流请留言
+			<a href="mailto:1003919353@qq.com">1003919353@qq.com</a>或<a href="tel:18107436127"> 致电</a>
+		</div>
+		<div class="mui-content">
+			<ul class="mui-table-view mui-grid-view mui-grid-9">
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+					<a id="me">
+						<span class="mui-icon">
+	    				<img src="img/icons/user_login.png" />
+	    			</span>
+						<div class="mui-media-body">
+							我
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+					<a id="gameon">
+						<span class="mui-icon">
+	    				<img src="img/icons/court.png" />
+	    			</span>
+						<div class="mui-media-body">
+							立即比赛
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+					<a id="leagueMatch">
+						<span class="mui-icon">
+							<img src="img/icons/trophy.png" />
+	    			</span>
+						<div class="mui-media-body">
+							组织联赛
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+					<a id="nearbyGame">
+						<span class="mui-icon">
+							<img src="img/icons/location.png" />
+	    			</span>
+						<div class="mui-media-body">
+							周边赛事
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+					<a href="#">
+						<span class="mui-icon">
+							<img src="img/icons/news.png" />
+	    			</span>
+						<div class="mui-media-body">
+							最新资讯
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+					<a href="#">
+						<span class="mui-icon">
+							<img src="img/icons/discuss.png" />
+	    			</span>
+						<div class="mui-media-body">
+							技术交流
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+					<a href="#">
+						<span class="mui-icon">
+							<img src="img/icons/shoes.png" />
+	    			</span>
+						<div class="mui-media-body">
+							篮球装备
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+					<a href="#">
+						<span class="mui-icon">
+							<img src="img/icons/feedback.png" />
+	    			</span>
+						<div class="mui-media-body">
+							意见反馈
+						</div>
+					</a>
+				</li>
+
+			</ul>
+		</div>
+	</body>
+
+</html>

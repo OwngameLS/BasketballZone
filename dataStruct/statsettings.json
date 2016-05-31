@@ -1,0 +1,36 @@
+// 比赛数据统计控件设置数据结构定义
+// 以下内容将保存在数据库中，从网络端下载的内容也是这样的形式
+// 根据这些配置来初始化
+// 初装应用时就会有一个key为defaultsettings的值
+// 设置成功了就会有一个key为lastsettings的值
+// 如果从远端下载了就会有一个key为xxx-settings的值（xxx为比赛代码）
+{
+	"statOptions":{// 统计选项
+		"isNeed24s" : false,
+		"isNeedOvertime" : false,
+		"isNeedRate" : false,
+		"isFreeThrow" : false,
+		"isNeedPersonal" : false
+	},
+	"gameRules" : {// 比赛规则
+		"type" : "fiba",// "cba","nba","halfcourt","self"
+		"totalSections" : 4,
+		"timePerSection" : 10,
+		"timeOvertime" : 5,
+		"playersOnCourt" : 5,
+		"foulOutCount" : 6,
+		"timeOutCount" : 10
+	},
+	"teamInfos" : {// 球队细节
+		"teamNameHome" : "主队",
+		"teamCodeHome" : "NULL",
+		"playerCountsHome" : "8",
+		"teamNameGuest" : "客队",
+		"teamCodeGuest" : "NULL",
+		"playerCountsGuest" : "8"
+	},
+	"playersInfos":{// 球员信息
+		"home" : [{"code":"x","no":1,"name":"owngame"},{"code":"x","no":2,"name":"owngame2"},{"code":"x","no":3,"name":"owngame3"}],
+		"guest" : []
+	}
+}

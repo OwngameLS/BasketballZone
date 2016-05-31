@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/statsettingscript.js"></script>
+		<script src="js/utils.js"></script>
+		<script src="js/uiscript.js"></script>
+		<link rel="stylesheet" href="css/mui.min.css">
+		<style type="text/css">
+			td {
+				text-align: center;
+			}
+		</style>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript" charset="UTF-8">
+			mui.init();
+			mui.plusReady(function() {
+				initStatSettings();
+				$("#prepareGame")[0].addEventListener("tap", function() {
+					//prepareGame();
+					startgame();
+				});
+				$('#playerCountsHome').bind("click", function() {
+					tapPlayerCounts('home');
+				});
+				$('#playerCountsGuest').bind('click', function() {
+					tapPlayerCounts('guest');
+				});
+				$('#gamesections').bind('input propertychange', function() {
+					setGameType('self');
+				});
+				$('#timepersection').bind('input propertychange', function() {
+					setGameType('self');
+				});
+				$('#playersoncourt').bind('input propertychange', function() {
+					setGameType('self');
+				});
+				$('#foulsMax').bind('input propertychange', function() {
+					setGameType('self');
+				});
+				$('#isPersonal').change(function() {
+					setplayersDisplay();
+				});
+				$('#isNeedOverTime').change(function() {
+					var ischk = $("#isNeedOverTime").is(':checked');
+					if (ischk) {
+						console.log("true");
+						$('#isNeedOverTimeDiv')[0].style.display = 'block';
+					} else {
+						console.log("false");
+						$('#isNeedOverTimeDiv')[0].style.display = 'none';
+					}
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" style="background: #EC971F;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">比赛设置</h1>
+			<a id="prepareGame" class="mui-btn mui-btn-primary  mui-btn-outlined  mui-pull-right" >准备比赛</a>
+		</header>
+		<div class="mui-content">
+			<h4>准备比赛！<br>在比赛开始前，请在下面做简要设置。</h4>
+			<div class="mui-card">
+				<table width="100%">
+					<tr>
+						<td>
+							载入上一次的设置
+						</td>
+						<td>
+							<div class="mui-input-row mui-radio mui-left">
+								<label>是</label>
+								<input type="radio" name="isLoadLastSettings" value="yes" onclick="loadLastSettings(true)" checked/>
+							</div>
+						</td>
+						<td>
+							<div class="mui-input-row mui-radio mui-left">
+								<label>否</label>
+								<input type="radio" name="isLoadLastSettings" value="no" onclick="loadLastSettings(false)" />
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<br>
+			<div class="mui-card">
+				<div class="mui-input-row">
+					<label>比赛代码</label>
+					<input type="text" id="gameNo" placeholder="如果你有比赛代码，请在这里输入">
+					<button id="checkGameNoBtn" type="button" onclick="chkGameNo()" class="mui-btn mui-btn-primary" style="display: none;">检查比赛代码</button>
+				</div>
+			</div>
+			<h5 class="mui-content-padded">设置数据统计细节选项</h5>
+			<div class="mui-card">
+				<form class="mui-input-group">
+					<div class="mui-input-row mui-checkbox mui-left">
+						<label>是否记录24s</label>
+						<input name="checkbox" id="is24s" type="checkbox" checked>
+					</div>
+					<div class="mui-input-row mui-checkbox mui-left">
+						<label>是否需要加时赛</label>
+						<input name="checkbox" id="isNeedOverTime" type="checkbox" checked>
+					</div>
+					<div class="mui-input-row mui-checkbox mui-left">
+						<label>是否记录投篮命中率</label>
+						<input name="checkbox" id="isRate" type="checkbox">
+					</div>
+					<div class="mui-input-row mui-checkbox mui-left">
+						<label>是否需要罚球</label>
+						<input name="checkbox" id="isFreeThrow" type="checkbox">
+					</div>
+					<div class="mui-input-row mui-checkbox mui-left">
+						<label>是否记录球员个人数据</label>
+						<input name="checkbox" id="isPersonal" type="checkbox">
+					</div>
+				</form>
+			</div>
+			<h5 class="mui-content-padded">选择比赛类型</h5>
+			<div class="mui-card">
+				<table width="100%">
+					<tr>
+						<td>
+							<div class="mui-input-row mui-radio mui-left">
+								<label>FIBA</label>
+								<input type="radio" name="gametype" value="fiba" onclick="setGameType('fiba')" checked/>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="mui-input-row mui-radio mui-left">
+								<label>CBA</label>
+								<input type="radio" name="gametype" value="cba" onclick="setGameType('cba')" />
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="mui-input-row mui-radio mui-left">
+								<label>NBA</label>
+								<input type="radio" name="gametype" value="nba" onclick="setGameType('nba')" />
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="mui-input-row mui-radio mui-left">
+								<label>半场</label>
+								<input type="radio" name="gametype" value="halfcourt" onclick="setGameType('3vs3')" />
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="mui-input-row mui-radio mui-left">
+								<label>自定义</label>
+								<input id="selfGameType" type="radio" name="gametype" value="self" onclick="setGameType('self')" />
+							</div>
+						</td>
+					<tr>
+					</tr>
+				</table>
+			</div>
+			<h5 class="mui-content-padded">比赛详细设置</h5>
+			<div class="mui-card">
+				<table width="95%">
+					<tr>
+						<td width="60%">
+							比赛总节数
+						</td>
+						<td>
+							<input type="text" id="gamesections" placeholder="比赛共分为几个小节" value="4">
+						</td>
+					</tr>
+					<tr>
+						<td width="60%">
+							每节比赛时间（分钟）
+						</td>
+						<td>
+							<input type="text" id="timepersection" placeholder="填写分钟数" value="10">
+						</td>
+					</tr>
+					<tr>
+						<td width="60%">
+							加时赛时间（分钟）
+						</td>
+						<td>
+							<input type="text" id="overtime" placeholder="填写分钟数" value="5">
+						</td>
+					</tr>
+					<tr>
+						<td width="60%">
+							每队上场人数
+						</td>
+						<td>
+							<input type="text" id="playersoncourt" placeholder="每队上场人数" value="5">
+						</td>
+					</tr>
+					<tr>
+						<td width="60%">
+							队员犯规上限
+						</td>
+						<td>
+							<input type="text" id="foulsMax" placeholder="" value="6">
+						</td>
+					</tr>
+					<tr>
+						<td width="60%">
+							暂停总次数
+						</td>
+						<td>
+							<input type="text" id="timeOutCount" placeholder="" value="6">
+						</td>
+					</tr>
+				</table>
+			</div>
+			<h5 class="mui-content-padded">球队详细信息</h5>
+			<div class="mui-card">
+				<div class="mui-input-row">
+					<label>主队名称</label>
+					<input type="text" id="teamNameHome" placeholder="输入队伍名称" value="主队">
+					<input type="text" id="teamCodeHome" placeholder="输入队伍代码（如果没有可以不输入）">
+				</div>
+				<div class="mui-input-row">
+					<label>主队人数</label>
+					<input type="text" id="playerCountsHome" placeholder="输入队伍的参赛人数，不小于上场人数" value="8">
+				</div>
+				<div class="mui-input-row">
+					<label>客队名称</label>
+					<input type="text" id="teamNameGuest" placeholder="输入队伍名称" value="客队">
+					<input type="text" id="teamCodeGuest" placeholder="输入队伍代码（如果没有可以不输入）">
+				</div>
+				<div class="mui-input-row">
+					<label>客队人数</label>
+					<input type="text" id="playerCountsGuest" placeholder="输入队伍的参赛人数，不小于上场人数" value="8">
+				</div>
+				<h4 id="playersInfoDiscription" class="mui-content-padded">队员详情，靠前的球员将先发上场。（如果你的队伍有代码，在上面输入代码后，下面会自动生成队员详情）</h4>
+				<div id="playersInfos">
+
+				</div>
+			</div>
+			<br>
+		</div>
+	</body>
+</html>
