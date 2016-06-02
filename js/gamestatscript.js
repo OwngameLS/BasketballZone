@@ -3,9 +3,10 @@
 var gameType; // 比赛类型
 var isNeed24s = false; // 是否需要记录24秒
 var totalSections; // 比赛总节数
+var gameCount = "time";// 比赛结束记录方式，时间或者分数
 var currentSection; // 当前节数
-var timePerSection; // 每一节的时间
-var timeOvertime; // 加时赛时间长度
+var gameCountPerSection; // 每一节结束的满足条件，比分或者时间
+var gameCountOvertime; // 加时赛的结束满足条件
 var isFreeThrow = true; // 是否需要罚球
 var isNeedPersonal = true; // 是否需要记录每个人的数据
 var isNeedOvertime = true; // 是否需要加时
@@ -58,7 +59,7 @@ var isOvertime = false;
 // 当进入比赛数据统计页面后，先初始化相关变量和UI
 function initGame() {
 	// 能到这一步，说明已经保存了相关的数据，读取这些设置数据用于初始化
-	var statSettings = loadLastSettings(true);
+	var statSettings = loadSettings("lastSettings");
 	initStatOptions(statSettings.statOptions); // 设置数据统计记录细节
 	initGameRules(statSettings.gameRules); // 设置比赛规则
 	initTeamInfos(statSettings.teamInfos); // 设置球队信息
@@ -84,8 +85,9 @@ function initStatOptions(statOptions) {
 function initGameRules(gameRules) {
 	gameType = gameRules.type;
 	totalSections = gameRules.totalSections;
-	timePerSection = gameRules.timePerSection;
-	timeOvertime = gameRules.timeOvertime;
+	gameCount = gameRules.gameCount;
+	gameCountPerSection = gameRules.gameCountPerSection;
+	gameCountOvertime = gameRules.gameCountOvertime;
 	playersOnCourt = gameRules.playersOnCourt;
 	foulOutCount = gameRules.foulOutCount;
 	timeOutCount = gameRules.timeOutCount;
@@ -732,8 +734,8 @@ function confirm_forcedModify(whichSide, statname, otherInfo) {
 function initTSSettings() {
 	currentSection = 1;
 	setSectionShow(currentSection);
-	setGameTimeShow(timePerSection + ":00");
-	setTimeCount(timePerSection);
+	setGameTimeShow(gameCountPerSection + ":00");
+	setTimeCount(gameCountPerSection);
 	$("#homename").html(teamNameHome);
 	$("#guestname").html(teamNameGuest);
 	setTSButtons();
@@ -882,11 +884,11 @@ function nextSection() {
 	currentSection = currentSection + 1;
 	setSectionShow(currentSection);
 	if (isOvertime) {
-		setTimeCount(timeOvertime);
-		setGameTimeShow(timeOvertime + ":00");
+		setTimeCount(gameCountOvertime);
+		setGameTimeShow(gameCountOvertime + ":00");
 	} else {
-		setTimeCount(timePerSection);
-		setGameTimeShow(timePerSection + ":00");
+		setTimeCount(gameCountPerSection);
+		setGameTimeShow(gameCountPerSection + ":00");
 	}
 	teamfoulsCurSectionHome = teamfoulsCurSectionGuest = 0;
 	$("#nextSection")[0].style.display = 'none';

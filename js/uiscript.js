@@ -26,3 +26,15 @@ function _myAnimate(el,count){
 		myAnimate(el,count);
 	}
 }
+
+// 对input UI 进行警示的方法
+// 参数：el input id;warningInfos 警告消息
+function myInputWarning(el,warningInfos){
+	el.attr("style","background:#F55");
+	mui.toast(warningInfos);
+}
+
+// 取消某个Input的警示颜色
+function cancleWarning(el){
+	el.attr("style","background:#FFF");
+}

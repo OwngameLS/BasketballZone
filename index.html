@@ -25,10 +25,11 @@
 //					convertJsonStr("");
 				});
 				$("#leagueMatch")[0].addEventListener("tap", function() {
-					var statSettings = '{"statOptions":{"isNeed24s":true,"isNeedOvertime":false,"isNeedRate":true,"isFreeThrow":false,"isNeedPersonal":true},"gameRules":{"type":"fiba","totalSections":4,"timePerSection":10,"timeOvertime":5,"playersOnCourt":5,"foulOutCount":6,"timeOutCount":10},"teamInfos":{"teamNameHome":"主队","teamCodeHome":"NULL","playerCountsHome":"8","teamNameGuest":"客队","teamCodeGuest":"NULL","playerCountsGuest":"8"	},"playersInfos":{"home":[{"code":"x","no":1,"name":"owngame"},{"code":"x","no":2,"name":"owngame2"},{"code":"x","no":3,"name":"owngame3"}],"guest":[]}}';
+					var statSettings = '{"statOptions":{"isNeed24s":true,"isNeedOvertime":false,"isNeedRate":true,"isFreeThrow":false,"isNeedPersonal":true},"gameRules":{"type":"fiba","gameCount":"score","totalSections":4,"gameCountPerSection":10,"gameCountOvertime":5,"playersOnCourt":5,"foulOutCount":6,"timeOutCount":10},"teamInfos":{"teamNameHome":"主队","teamCodeHome":"","playerCountsHome":6,"teamNameGuest":"客队","teamCodeGuest":"","playerCountsGuest":6},"playersInfos":{"home":[{"code":"x","no":1,"name":"owngame"},{"code":"x","no":2,"name":"owngame2"},{"code":"x","no":3,"name":"owngame3"},{"code":"x","no":5,"name":"匿名0"},{"code":"x","no":15,"name":"匿名1"},{"code":"x","no":10,"name":"匿名2"},{"code":"x","no":7,"name":"匿名3"},{"code":"x","no":9,"name":"匿名4"}],"guest":[{"code":"x","no":3,"name":"匿名0"},{"code":"x","no":4,"name":"匿名1"},{"code":"x","no":5,"name":"匿名2"},{"code":"x","no":6,"name":"匿名3"},{"code":"x","no":7,"name":"匿名4"},{"code":"x","no":8,"name":"匿名5"},{"code":"x","no":9,"name":"匿名6"},{"code":"x","no":10,"name":"匿名7"},{"code":"x","no":13,"name":"匿名0"}]}}';
 					myStorageHandler_setItem("lastSettings", statSettings);
 				});
 				$("#nearbyGame")[0].addEventListener("tap", function() {
+//					console.log("what the fuck.");
 					myStorageHandler_getItem("lastSettings");
 				});
 				

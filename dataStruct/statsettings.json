@@ -14,9 +14,10 @@
 	},
 	"gameRules" : {// 比赛规则
 		"type" : "fiba",// "cba","nba","halfcourt","self"
+		"gameCount" : "time",//"score",以什么方式记录作为结束
 		"totalSections" : 4,
-		"timePerSection" : 10,
-		"timeOvertime" : 5,
+		"gameCountPerSection" : 10,
+		"gameCountOvertime" : 5,
 		"playersOnCourt" : 5,
 		"foulOutCount" : 6,
 		"timeOutCount" : 10

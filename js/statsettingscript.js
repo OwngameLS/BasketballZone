@@ -4,10 +4,11 @@
 // 根据用户初始设定的环境变量
 var gameType; // 比赛类型
 var isNeed24s = false; // 是否需要记录24秒
+var gameCount = "time"; // 比赛结束记录方式，时间或者分数
 var totalSections; // 比赛总节数
 var currentSection; // 当前节数
-var timePerSection; // 每一节的时间
-var timeOvertime; // 加时赛时间长度
+var gameCountPerSection; // 每一节结束的满足条件，比分或者时间
+var gameCountOvertime; // 加时赛的结束满足条件
 var isFreeThrow = true; // 是否需要罚球
 var isNeedPersonal = true; // 是否需要记录每个人的数据
 var isNeedOvertime = true; // 是否需要加时
@@ -37,14 +38,15 @@ var playerInfosString = '';
 
 // 当进入比赛设置页面后，先执行一次设置，从上一次使用的设置中读取
 function initStatSettings() {
+	var statSettings = null;
 	// 是否读取上一次的设置
 	if (isNeedLastSettings()) {
-		var statSettings = loadLastSettings(true);
-		// 将读取到的statSettings(jsonObj)传到初始化方法中
-		prepareGame(statSettings);
+		statSettings = loadSettings("lastSettings");
 	} else { // 不读取，则先将相关的控件初始化好
-		prepareGame(null);
+		statSettings = loadSettings("defaultSettings");
 	}
+	// 将读取到的statSettings(jsonObj)传到初始化方法中
+	prepareGame(statSettings);
 
 	//	// 检查是否输入了比赛代码
 	//	// 如果有设置了比赛代码，则从远端读取比赛设置，只留下可以自定义的设置
@@ -63,7 +65,6 @@ function initStatSettings() {
 }
 
 function isNeedLastSettings() {
-	//	console.log("isNeedLastSettings");
 	var isNeed = $("input[name='isLoadLastSettings']:checked").val(); // jquery 对radiobutton选中值的判断 
 	if (isNeed == 'yes') {
 		return true;
@@ -95,14 +96,12 @@ function myAjaxBoolean(urlStr, dataStr) {
 
 		}
 	});
-
 }
 
 // 初始化比赛设置的各类控件
 // parameter：statSettings 用于初始化控件的json对象
 // 用statSettings的各个部分初始化各个控件
 function prepareGame(statSettings) {
-	//	console.log("prepareGame...");
 	if (statSettings != null) { // 读到了配置
 		setStatOptions(statSettings.statOptions); // 设置数据统计记录细节
 		setGameRules(statSettings.gameRules); // 设置比赛规则
@@ -119,6 +118,69 @@ function prepareGame(statSettings) {
 
 }
 
+
+
+// 验证设置的方法
+// 当一些配置发生了更改，就要做判断，确保开始比赛前的设置都是符合逻辑的
+function verifySettings() {
+	console.log("verify settings..." + totalSections);
+	if (isInteger(totalSections) == false) {
+		cantStartGame();
+		myInputWarning($("#totalsections"), "请输入数字");
+		return;
+	} else {
+		cancleWarning($("#totalsections"));
+	}
+	console.log("11");
+	if (isInteger(gameCountPerSection) == false) {
+		cantStartGame();
+		myInputWarning($("#gamecountpersection"), "请输入数字");
+		return;
+	} else {
+		cancleWarning($("#gamecountpersection"));
+	}
+	console.log("12");
+	if (isInteger(gameCountOvertime) == false) {
+		cantStartGame();
+		myInputWarning($("#gamecountovertime"), "请输入数字");
+		return;
+	} else {
+		cancleWarning($("#gamecountovertime"));
+	}
+	console.log("13");
+	if (isInteger(playersOnCourt) == false) {
+		cantStartGame();
+		myInputWarning($("#playersoncourt"), "请输入数字");
+		return;
+	} else {
+		cancleWarning($("#playersoncourt"));
+	}
+	console.log("14");
+	if (isInteger(foulOutCount) == false) {
+		cantStartGame();
+		myInputWarning($("#foulOutCount"), "请输入数字");
+		return;
+	} else {
+		cancleWarning($("#foulOutCount"));
+	}
+	console.log("15");
+	if (isInteger(timeOutCount) == false) {
+		cantStartGame();
+		myInputWarning($("#timeOutCount"), "请输入数字");
+		return;
+	} else {
+		cancleWarning($("#timeOutCount"));
+	}
+	console.log("16");
+}
+
+// 当设置出现问题是，不允许开始比赛
+function cantStartGame() {
+	canStartGame = false;
+	$("#prepareGame").html("准备比赛");
+	$("#prepareGame").attr("class", "mui-btn mui-btn-primary  mui-btn-outlined  mui-pull-right");
+}
+
 // 开始比赛
 function startgame() {
 	// 将所有需要保存的变量信息保存到文件中
@@ -129,10 +191,9 @@ function startgame() {
 }
 
 // 保存所有设置
-
 function saveSettings() {
 	saveStatOptions(); // 保存数据统计记录细节
-	saveGameRules(); // 保存比赛规则
+	saveGameRules(); // 保存比赛规则	
 	saveTeamInfos(); // 保存球队信息
 	savePlayerInfos(); // 保存球员信息
 	settingsJsonString = '{' + statOptionString + ',' + gameRulesString + ',' + teamInfosString + ',' + playerInfosString + '}';
@@ -157,17 +218,17 @@ function getStatOptions() {
 // 保存比赛规则
 function saveGameRules() {
 	getGameRules();
-	gameRulesString = '"gameRules":{"type":"' + gameType + '","totalSections":' + totalSections + ',"timePerSection":' + timePerSection + ',"timeOvertime":' + timeOvertime + ',"playersOnCourt":' + playersOnCourt + ',"foulOutCount":' + foulOutCount + ',"timeOutCount":' + timeOutCount + '}';
+	gameRulesString = '"gameRules":{"type":"' + gameType + '","gameCount":"' + gameCount + '","totalSections":' + totalSections + ',"gameCountPerSection":' + gameCountPerSection + ',"timeOvertime":' + gameCountOvertime + ',"playersOnCourt":' + playersOnCourt + ',"foulOutCount":' + foulOutCount + ',"timeOutCount":' + timeOutCount + '}';
 }
 
 // 从UI上读取比赛规则，并初始化其他相关变量
 function getGameRules() {
 	gameType = $("input[name='gametype']:checked").val();
-	totalSections = $("#gamesections").val();
-	timePerSection = $("#timepersection").val();
-	timeOvertime = $("#overtime").val();
+	totalSections = $("#totalsections").val();
+	gameCountPerSection = $("#gamecountpersection").val();
+	gameCountOvertime = $("#gamecountovertime").val();
 	playersOnCourt = $("#playersoncourt").val();
-	foulOutCount = $("#foulsMax").val();
+	foulOutCount = $("#foulOutCount").val();
 	timeOutCount = $("#timeOutCount").val();
 }
 
@@ -187,7 +248,7 @@ function getTeamInfos() {
 	playerCountsGuest = $("#playerCountsGuest").val();
 }
 
-// hereweare160523 准备实现球员信息保存
+
 // 保存球员信息
 function savePlayerInfos() {
 	playerInfosString = '"playersInfos":{';
@@ -235,15 +296,16 @@ function setStatOptions(statOptions) {
 function setGameRules(gameRules) {
 	gameType = gameRules.type;
 	totalSections = gameRules.totalSections;
-	$("#gamesections").val(totalSections);
-	timePerSection = gameRules.timePerSection;
-	$("#timepersection").val(timePerSection);
-	timeOvertime = gameRules.timeOvertime;
-	$("#overtime").val(timeOvertime);
+	gameCount = gameRules.gameCount;
+	$("#totalsections").val(totalSections);
+	gameCountPerSection = gameRules.gameCountPerSection;
+	$("#gamecountpersection").val(gameCountPerSection);
+	gameCountOvertime = gameRules.gameCountOvertime;
+	$("#gamecountovertime").val(gameCountOvertime);
 	playersOnCourt = gameRules.playersOnCourt;
 	$("#playersoncourt").val(playersOnCourt);
 	foulOutCount = gameRules.foulOutCount;
-	$("#foulsMax").val(foulOutCount);
+	$("#foulOutCount").val(foulOutCount);
 	timeOutCount = gameRules.timeOutCount;
 	$("#timeOutCount").val(timeOutCount);
 	var type = gameRules.type;
@@ -257,6 +319,7 @@ function setGameRules(gameRules) {
 		$("input[name='gametype'][value='3vs3']").attr("checked", true);
 	} else if (type == 'self') {
 		$("input[name='gametype'][value='self']").attr("checked", true);
+		showGameCount(true);
 	}
 }
 
@@ -288,7 +351,6 @@ function setPlayerInfos(playersInfos) {
 	if (playersInfos.guest.length != 0) {
 		guestPlayerInfos = playersInfos.guest;
 	}
-
 	setplayersDisplay();
 }
 
@@ -341,7 +403,6 @@ function setplayersDisplay() {
 	//	console.log("htmlStr:" + htmlStr);
 	$("#playersInfos").html(htmlStr);
 	$("div [name='playerNumber']").addClass("mui-input-row");
-	canStartGame = true;
 }
 
 // 增加匿名球员的信息
@@ -427,49 +488,97 @@ function toolMax(a, b) {
 // 设置比赛类型
 // 当比赛类型UI控件被操作，相应的变量和控件也随之变化
 function setGameType(type) {
+	console.log("setGameType here.");
 	gameType = type;
 	if (type == 'fiba') {
 		totalSections = 4;
-		timePerSection = 10;
-		timeOvertime = 5;
+		gameCountPerSection = 10;
+		gameCountOvertime = 5;
 		playersOnCourt = 5;
 		foulOutCount = 5;
 	} else if (type == 'cba') {
 		totalSections = 4;
-		timePerSection = 10;
-		timeOvertime = 5;
+		gameCountPerSection = 10;
+		gameCountOvertime = 5;
 		playersOnCourt = 5;
 		foulOutCount = 5;
 	} else if (type == 'nba') {
 		totalSections = 4;
-		timePerSection = 12;
-		timeOvertime = 5;
+		gameCountPerSection = 12;
+		gameCountOvertime = 5;
 		playersOnCourt = 5;
 		foulOutCount = 6;
 	} else if (type == '3vs3') {
 		totalSections = 1;
-		timePerSection = 15;
-		timeOvertime = 5;
+		gameCountPerSection = 15;
+		gameCountOvertime = 5;
 		playersOnCourt = 3;
 		foulOutCount = 6;
 	} else if (type == 'self') {
-		totalSections = $("#gamesections").val();
-		timePerSection = $("#timepersection").val();
-		timeOvertime = $("#overtime").val();
+		$("#selfGameType").attr("checked", "checked");
+		totalSections = $("#totalsections").val();
+		gameCountPerSection = $("#gamecountpersection").val();
+		gameCountOvertime = $("#gamecountovertime").val();
 		playersOnCourt = $("#playersoncourt").val();
-		foulOutCount = $("#foulsMax").val();
+		foulOutCount = $("#foulOutCount").val();
+		timeOutCount = $("#timeOutCount").val();
+		verifySettings();
 	}
-
-	$("#gamesections").val(totalSections);
-	$("#timepersection").val(timePerSection);
-	$("#overtime").val(timeOvertime);
-	$("#playersoncourt").val(playersOnCourt);
-	$("#foulsMax").val(foulOutCount);
 
 	if (type != 'self') {
-		$("#playerCountsHome").val(playersOnCourt + 3);
-		$("#playerCountsGuest").val(playersOnCourt + 3);
+		gameCount = 'time';
+		showGameCount(false);
+	} else {
+		showGameCount(true);
 	}
+
+	$("#totalsections").val(totalSections);
+	$("#gamecountpersection").val(gameCountPerSection);
+	$("#gamecountovertime").val(gameCountOvertime);
+	$("#playersoncourt").val(playersOnCourt);
+	$("#foulOutCount").val(foulOutCount);
+
+	//	if (type != 'self') {
+	//		$("#playerCountsHome").val(playersOnCourt + 3);
+	//		$("#playerCountsGuest").val(playersOnCourt + 3);
+	//	}
+}
+
+// 是否显示自定义比赛的结束方式
+function showGameCount(isShown) {
+	var attr = "background: #4CD964;";
+	if (isShown == false) {
+		attr = "display:none;" + attr;
+	}
+	$("#gameCount").attr("style", attr);
+	setGameCountDisplay();
+}
+
+// 显示自定义比赛结束方式相关的UI控件
+function setGameCountDisplay() {
+	if (gameCount == 'score') {
+		$("#gameCountScore").attr("checked", "checked");
+		$("#labelgamecountpersection").html("每节需要打满的分数");
+		$("#gamecountpersection").attr("placeholder", "填写分数");
+		$("#gamecountpersection").attr("value", gameCountPerSection);
+		$("#labelgamecountovertime").html("加时赛需要打满的分数");
+		$("#gamecountovertime").attr("placeholder", "填写分数");
+		$("#gamecountovertime").attr("value", gameCountOvertime);
+	} else {
+		$("#gameCountTime").attr("checked", "checked");
+		$("#labelgamecountpersection").html("每节比赛时间（分钟）");
+		$("#gamecountpersection").attr("placeholder", "填写分钟数");
+		$("#gamecountpersection").attr("value", gameCountPerSection);
+		$("#labelgamecountovertime").html("加时赛时间（分钟）");
+		$("#gamecountovertime").attr("placeholder", "填写分钟数");
+		$("#gamecountovertime").attr("value", gameCountOvertime);
+	}
+}
+
+// 响应比赛结束方式控件的选择事件
+function setGameCount(v) {
+	gameCount = v;
+	setGameCountDisplay();
 }
 
 // 设置队员
@@ -482,6 +591,9 @@ function setplayerCounts() {
 	var g = $("#playerCountsGuest").val();
 
 	if (h == '' && g == '') {
+		mui.toast("球队人数不能为空！");
+		myAnimate($("#playerCountsHome"), 8);
+		myAnimate($("#playerCountsGuest"), 8);
 		return;
 	}
 
@@ -531,7 +643,8 @@ function setplayerCounts() {
 // 当队伍人数输入时，用一个对话框来判断，就可以避免了输入数字合理步骤中的强行判断
 function tapPlayerCounts(whichSide) {
 	//	mui.prompt('text','deftext','title',['true','false'],null,'div')
-	var text, deftext = '原来输入的是';
+	var text;
+	var deftext = '原来输入的是';
 	if (whichSide == 'home') {
 		text = '主队的哦';
 		deftext += $("#playerCountsHome").val();
@@ -539,7 +652,7 @@ function tapPlayerCounts(whichSide) {
 		text = '客队的哦';
 		deftext += $("#playerCountsGuest").val();
 	}
-	mui.prompt(text, deftext, '请输入球员人数', ['确定', '取消'], function(e) {// 文档里啥都没有！幸好有网友！
+	mui.prompt(text, deftext, '请输入球员人数', ['确定', '取消'], function(e) { // 文档里啥都没有！幸好有网友！
 		if (e.index == 0) {
 			if (whichSide == 'home') {
 				$("#playerCountsHome").val(e.value);
@@ -548,5 +661,5 @@ function tapPlayerCounts(whichSide) {
 			}
 		}
 		setplayerCounts();
-	}, null);// 最后一个参数用 'div'，对话窗口用的是h5绘制的，搞丢在这里不对，所以用原生的了
+	}, null); // 最后一个参数用 'div'，对话窗口用的是h5绘制的，搞丢在这里不对，所以用原生的了
 }

@@ -27,36 +27,42 @@
 					startgame();
 				});
 				$('#playerCountsHome').bind("click", function() {
+					console.log("tapPlayerCounts");
 					tapPlayerCounts('home');
 				});
 				$('#playerCountsGuest').bind('click', function() {
+					console.log("tapPlayerCounts");
 					tapPlayerCounts('guest');
 				});
-				$('#gamesections').bind('input propertychange', function() {
+				$('#totalsections').bind('input propertychange', function() {
 					setGameType('self');
 				});
-				$('#timepersection').bind('input propertychange', function() {
+				$('#gamecountpersection').bind('input propertychange', function() {
+					setGameType('self');
+				});
+				$('#gamecountovertime').bind('input propertychange', function() {
 					setGameType('self');
 				});
 				$('#playersoncourt').bind('input propertychange', function() {
 					setGameType('self');
 				});
-				$('#foulsMax').bind('input propertychange', function() {
+				$('#foulOutCount').bind('input propertychange', function() {
+					setGameType('self');
+				});
+				$('#timeOutCount').bind('input propertychange', function() {
 					setGameType('self');
 				});
 				$('#isPersonal').change(function() {
 					setplayersDisplay();
 				});
-				$('#isNeedOverTime').change(function() {
+				/*$('#isNeedOverTime').change(function() {
 					var ischk = $("#isNeedOverTime").is(':checked');
 					if (ischk) {
-						console.log("true");
 						$('#isNeedOverTimeDiv')[0].style.display = 'block';
 					} else {
-						console.log("false");
 						$('#isNeedOverTimeDiv')[0].style.display = 'none';
 					}
-				});
+				});*/
 			});
 		</script>
 	</head>
@@ -65,7 +71,7 @@
 		<header class="mui-bar mui-bar-nav" style="background: #EC971F;">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">比赛设置</h1>
-			<a id="prepareGame" class="mui-btn mui-btn-primary  mui-btn-outlined  mui-pull-right" >准备比赛</a>
+			<a id="prepareGame" class="mui-btn mui-btn-primary  mui-btn-outlined  mui-pull-right">准备比赛</a>
 		</header>
 		<div class="mui-content">
 			<h4>准备比赛！<br>在比赛开始前，请在下面做简要设置。</h4>
@@ -165,7 +171,18 @@
 								<input id="selfGameType" type="radio" name="gametype" value="self" onclick="setGameType('self')" />
 							</div>
 						</td>
-					<tr>
+					</tr>
+					<tr id="gameCount" style="display: none; background: #4CD964;">
+						<td>
+							<div class="mui-input-row mui-radio mui-left">
+								<label>计时</label>
+								<input id="gameCountTime" type="radio" name="gamecount" value="countTime" onclick="setGameCount('time')" />
+							</div>
+							<div class="mui-input-row mui-radio mui-left">
+								<label>计分</label>
+								<input id="gameCountScore" type="radio" name="gamecount" value="countScore" onclick="setGameCount('score')" />
+							</div>
+						</td>
 					</tr>
 				</table>
 			</div>
@@ -177,23 +194,23 @@
 							比赛总节数
 						</td>
 						<td>
-							<input type="text" id="gamesections" placeholder="比赛共分为几个小节" value="4">
+							<input type="text" id="totalsections" placeholder="几个小节" value="4">
 						</td>
 					</tr>
 					<tr>
-						<td width="60%">
+						<td width="60%" id="labelgamecountpersection">
 							每节比赛时间（分钟）
 						</td>
 						<td>
-							<input type="text" id="timepersection" placeholder="填写分钟数" value="10">
+							<input type="text" id="gamecountpersection" placeholder="填写分钟数" value="10">
 						</td>
 					</tr>
 					<tr>
-						<td width="60%">
+						<td width="60%" id="labelgamecountovertime">
 							加时赛时间（分钟）
 						</td>
 						<td>
-							<input type="text" id="overtime" placeholder="填写分钟数" value="5">
+							<input type="text" id="gamecountovertime" placeholder="填写分钟数" value="5">
 						</td>
 					</tr>
 					<tr>
@@ -209,7 +226,7 @@
 							队员犯规上限
 						</td>
 						<td>
-							<input type="text" id="foulsMax" placeholder="" value="6">
+							<input type="text" id="foulOutCount" placeholder="" value="6">
 						</td>
 					</tr>
 					<tr>
@@ -250,4 +267,5 @@
 			<br>
 		</div>
 	</body>
+
 </html>

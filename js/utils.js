@@ -1,13 +1,10 @@
 // 一些工具方法
 
 
-// 是否载入上一次的设置
-function loadLastSettings(choise) {
-	if (choise) {
-		return convertJsonStr(myStorageHandler_getItem("lastSettings"));
-	} else {
-		return;
-	}
+// 读取设置
+function loadSettings(settingsName) {
+//	console.log("myStorageHandler_getItem(settingsName):" + myStorageHandler_getItem(settingsName));
+	return convertJsonStr(myStorageHandler_getItem(settingsName));
 }
 
 // h5+ storage操作 ：写入数据库
@@ -90,3 +87,17 @@ function convertJsonStr(jsonStr){
 	return obj;
 }
 
+// 判断是不是大于0的整数
+function isInteger(obj) {
+	var o = Math.floor(obj);
+	console.log("o:" + o);
+	if(o == obj){// ==== 就不行
+		if(o>0){
+			return true;
+		}else{
+			return false;
+		}
+	}else{
+		return false;
+	}
+}
