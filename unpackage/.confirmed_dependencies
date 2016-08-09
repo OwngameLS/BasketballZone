@@ -1,51 +1,56 @@
 {
-	"index.html": {
-		"resources": [
-			"img/icons/location.png",
-			"img/icons/court.png",
-			"js/mui.min.js",
-			"fonts/mui.ttf",
-			"img/icons/trophy.png",
-			"css/mui.min.css",
-			"img/icons/feedback.png",
-			"img/icons/shoes.png",
-			"img/icons/news.png",
-			"img/icons/basketball.png",
-			"img/icons/discuss.png",
-			"img/icons/user_login.png",
-			"img/icons/feedback-2.png",
-			"js/jquery.min.js",
-			"js/gamescript.js",
-			"js/uiscript.js",
-			"js/utils.js"
-		],
-		"refer": [
-			"gamesettings.html"
-		]
-	},
-	"gamesettings.html": {
-		"resources": [
-			"js/gamescript.js",
-			"js/jquery.min.js",
-			"js/mui.min.js",
-			"fonts/mui.ttf",
-			"css/mui.min.css",
-			"js/utils.js",
-			"js/statsettingscript.js",
-			"js/uiscript.js"
-		],
-		"refer": [
-			"gamestats.html"
-		]
-	},
-	"gamestats.html": {
-		"resources": [
-			"js/gamescript.js",
-			"js/mui.min.js",
-			"css/mui.min.css",
-			"js/jquery.min.js",
-			"js/gamestatscript.js",
-			"js/utils.js"
-		]
-	}
+  "index.html": {
+    "resources": [
+      "img/icons/location.png",
+      "img/icons/court.png",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "img/icons/trophy.png",
+      "css/mui.min.css",
+      "img/icons/feedback.png",
+      "img/icons/shoes.png",
+      "img/icons/news.png",
+      "img/icons/basketball.png",
+      "img/icons/discuss.png",
+      "img/icons/user_login.png",
+      "img/icons/feedback-2.png",
+      "js/jquery.min.js",
+      "js/gamescript.js",
+      "js/uiscript.js",
+      "js/utils.js",
+      "js/indexscript.js"
+    ],
+    "refer": [
+      "gamesettings.html"
+    ]
+  },
+  "gamesettings.html": {
+    "resources": [
+      "js/gamescript.js",
+      "js/jquery.min.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/utils.js",
+      "js/statsettingscript.js",
+      "js/uiscript.js"
+    ],
+    "refer": [
+      "gamestats.html"
+    ]
+  },
+  "gamestats.html": {
+    "resources": [
+      "js/gamescript.js",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "js/jquery.min.js",
+      "js/gamestatscript.js",
+      "js/utils.js",
+      "img/arrow_l.png",
+      "js/uiscript.js",
+      "img/arrow_r.png",
+      "fonts/mui.ttf"
+    ]
+  }
 }

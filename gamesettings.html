@@ -12,19 +12,43 @@
 		<script src="js/utils.js"></script>
 		<script src="js/uiscript.js"></script>
 		<link rel="stylesheet" href="css/mui.min.css">
-		<style type="text/css">
-			td {
-				text-align: center;
-			}
-		</style>
+		<style type="text/css">td {
+	text-align: center;
+}</style>
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<script type="text/javascript" charset="UTF-8">
 			mui.init();
 			mui.plusReady(function() {
 				initStatSettings();
 				$("#prepareGame")[0].addEventListener("tap", function() {
-					//prepareGame();
 					startgame();
+				});
+				$('#isNeedOffensiveTimeLimit').change(function() {
+					setOffensiveSettingDisplay();
+					verifySettings();
+				});
+				$('#isCountFoul').change(function() {
+					var a = $("#isCountFoul").is(':checked');
+					var b = $("#isShotOnly").is(':checked');
+					if(a == true){// 需要记录犯规
+						if(b == true){// 已经选择了只记录投篮
+							// 提醒用户
+							myAnimate($("#isShotOnly"), 8, "先取消这个选择吧");
+							$("#isCountFoul").attr("checked",false);
+						}
+					}else{
+						setFoulSettingDisplay();
+						verifySettings();	
+					}
+				});
+				$('#isNeedOverTime').change(function() {
+					setOvertimeSettingDisplay();
+					verifySettings();
+				});
+				$('#isShotOnly').change(function() {
+					$("#isCountFoul").attr("checked",false);
+					setFoulSettingDisplay();
+					verifySettings();
 				});
 				$('#playerCountsHome').bind("click", function() {
 					console.log("tapPlayerCounts");
@@ -43,26 +67,28 @@
 				$('#gamecountovertime').bind('input propertychange', function() {
 					setGameType('self');
 				});
+				$('#firstOffensiveTimeLimit').bind('input propertychange', function() {
+					setGameType('self');
+				});
+				$('#secondOffensiveTimeLimit').bind('input propertychange', function() {
+					setGameType('self');
+				});
 				$('#playersoncourt').bind('input propertychange', function() {
 					setGameType('self');
 				});
 				$('#foulOutCount').bind('input propertychange', function() {
 					setGameType('self');
 				});
+				$('#foulsPersection').bind('input propertychange', function() {
+					setGameType('self');
+				});
 				$('#timeOutCount').bind('input propertychange', function() {
 					setGameType('self');
 				});
-				$('#isPersonal').change(function() {
+				$('#isNeedPersonal').change(function() {
 					setplayersDisplay();
 				});
-				/*$('#isNeedOverTime').change(function() {
-					var ischk = $("#isNeedOverTime").is(':checked');
-					if (ischk) {
-						$('#isNeedOverTimeDiv')[0].style.display = 'block';
-					} else {
-						$('#isNeedOverTimeDiv')[0].style.display = 'none';
-					}
-				});*/
+				
 			});
 		</script>
 	</head>
@@ -75,7 +101,7 @@
 		</header>
 		<div class="mui-content">
 			<h4>准备比赛！<br>在比赛开始前，请在下面做简要设置。</h4>
-			<div class="mui-card">
+			<div class="mui-card" id="isLoadLastSettingDIV">
 				<table width="100%">
 					<tr>
 						<td>
@@ -84,32 +110,25 @@
 						<td>
 							<div class="mui-input-row mui-radio mui-left">
 								<label>是</label>
-								<input type="radio" name="isLoadLastSettings" value="yes" onclick="loadLastSettings(true)" checked/>
+								<input type="radio" name="isLoadLastSettings" value="yes" onclick="setIsLoadLastSettings(true)" checked/>
 							</div>
 						</td>
 						<td>
 							<div class="mui-input-row mui-radio mui-left">
 								<label>否</label>
-								<input type="radio" name="isLoadLastSettings" value="no" onclick="loadLastSettings(false)" />
+								<input type="radio" name="isLoadLastSettings" value="no" onclick="setIsLoadLastSettings(false)" />
 							</div>
 						</td>
 					</tr>
 				</table>
 			</div>
 			<br>
-			<div class="mui-card">
-				<div class="mui-input-row">
-					<label>比赛代码</label>
-					<input type="text" id="gameNo" placeholder="如果你有比赛代码，请在这里输入">
-					<button id="checkGameNoBtn" type="button" onclick="chkGameNo()" class="mui-btn mui-btn-primary" style="display: none;">检查比赛代码</button>
-				</div>
-			</div>
 			<h5 class="mui-content-padded">设置数据统计细节选项</h5>
 			<div class="mui-card">
 				<form class="mui-input-group">
 					<div class="mui-input-row mui-checkbox mui-left">
-						<label>是否记录24s</label>
-						<input name="checkbox" id="is24s" type="checkbox" checked>
+						<label>是否有进攻时限</label>
+						<input name="checkbox" id="isNeedOffensiveTimeLimit" type="checkbox" checked>
 					</div>
 					<div class="mui-input-row mui-checkbox mui-left">
 						<label>是否需要加时赛</label>
@@ -120,12 +139,20 @@
 						<input name="checkbox" id="isRate" type="checkbox">
 					</div>
 					<div class="mui-input-row mui-checkbox mui-left">
-						<label>是否需要罚球</label>
+						<label>是否只记录投篮</label>
+						<input name="checkbox" id="isShotOnly" type="checkbox">
+					</div>
+					<div class="mui-input-row mui-checkbox mui-left">
+						<label>是否记录犯规</label>
+						<input name="checkbox" id="isCountFoul" type="checkbox">
+					</div>
+					<div class="mui-input-row mui-checkbox mui-left">
+						<label>是否记录罚球</label>
 						<input name="checkbox" id="isFreeThrow" type="checkbox">
 					</div>
 					<div class="mui-input-row mui-checkbox mui-left">
 						<label>是否记录球员个人数据</label>
-						<input name="checkbox" id="isPersonal" type="checkbox">
+						<input name="checkbox" id="isNeedPersonal" type="checkbox">
 					</div>
 				</form>
 			</div>
@@ -197,7 +224,7 @@
 							<input type="text" id="totalsections" placeholder="几个小节" value="4">
 						</td>
 					</tr>
-					<tr>
+					<tr id="gameCountTR">
 						<td width="60%" id="labelgamecountpersection">
 							每节比赛时间（分钟）
 						</td>
@@ -205,12 +232,28 @@
 							<input type="text" id="gamecountpersection" placeholder="填写分钟数" value="10">
 						</td>
 					</tr>
-					<tr>
+					<tr id="overtimeGameCountTR">
 						<td width="60%" id="labelgamecountovertime">
 							加时赛时间（分钟）
 						</td>
 						<td>
 							<input type="text" id="gamecountovertime" placeholder="填写分钟数" value="5">
+						</td>
+					</tr>
+					<tr id="firstOffensiveTimeLimitTR">
+						<td width="60%">
+							进攻时限（秒）
+						</td>
+						<td>
+							<input type="text" id="firstOffensiveTimeLimit" placeholder="填写秒数" value="24">
+						</td>
+					</tr>
+					<tr id="secondOffensiveTimeLimitTR">
+						<td width="60%">
+							二次进攻回表（秒）
+						</td>
+						<td>
+							<input type="text" id="secondOffensiveTimeLimit" placeholder="填写秒数" value="14">
 						</td>
 					</tr>
 					<tr>
@@ -221,12 +264,20 @@
 							<input type="text" id="playersoncourt" placeholder="每队上场人数" value="5">
 						</td>
 					</tr>
-					<tr>
+					<tr id="foulCountTR1">
 						<td width="60%">
 							队员犯规上限
 						</td>
 						<td>
 							<input type="text" id="foulOutCount" placeholder="" value="6">
+						</td>
+					</tr>
+					<tr id="foulCountTR2">
+						<td width="60%">
+							单节犯规上限
+						</td>
+						<td>
+							<input type="text" id="foulsPersection" placeholder="超过这个数字将提醒" value="4">
 						</td>
 					</tr>
 					<tr>
@@ -246,7 +297,7 @@
 					<input type="text" id="teamNameHome" placeholder="输入队伍名称" value="主队">
 					<input type="text" id="teamCodeHome" placeholder="输入队伍代码（如果没有可以不输入）">
 				</div>
-				<div class="mui-input-row">
+				<div class="mui-input-row" id="playerCountsHomeDIV">
 					<label>主队人数</label>
 					<input type="text" id="playerCountsHome" placeholder="输入队伍的参赛人数，不小于上场人数" value="8">
 				</div>
@@ -255,7 +306,7 @@
 					<input type="text" id="teamNameGuest" placeholder="输入队伍名称" value="客队">
 					<input type="text" id="teamCodeGuest" placeholder="输入队伍代码（如果没有可以不输入）">
 				</div>
-				<div class="mui-input-row">
+				<div class="mui-input-row" id="playerCountsGuestDIV">
 					<label>客队人数</label>
 					<input type="text" id="playerCountsGuest" placeholder="输入队伍的参赛人数，不小于上场人数" value="8">
 				</div>

@@ -7,32 +7,37 @@
 		<title></title>
 		<script src="js/mui.min.js"></script>
 		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/uiscript.js"></script>
 		<script src="js/utils.js"></script>
+		<script src="js/indexscript.js"></script>
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<script type="text/javascript" charset="UTF-8">
 			mui.init();
 			mui.plusReady(function() {
 				$("#gameon")[0].addEventListener("tap", function() {
-					openWindow("gamesettings.html", "gamesettings");
+					getReadyGame();
 				});
 				$("#me")[0].addEventListener("tap", function() {
-//					var tempStr = '{"statOptions":{"isNeed24s":false,"isNeedOvertime":false,"isNeedRate":false,"isFreeThrow":false,"isNeedPersonal":false},"gameRules":{"type":"fiba","totalSections":4,"timePerSection":10,"timeOvertime":5,"playersOnCourt":5,"foulOutCount":6},"teamInfos":{"teamNameHome":"主队","teamCodeHome":"NULL","playerCountsHome":"8","teamNameGuest":"客队","teamCodeGuest":"NULL","playerCountsGuest":"8"	},"playersInfos":{"Home":[],"Guest":[]}}';
-////					writeFile(plus.io.PUBLIC_DOCUMENTS,"statSettings/defaultsettings.txt",tempStr);// 这里以后要加入文件夹的写入
-////					readFileContent(plus.io.PUBLIC_DOCUMENTS, "statSettings/defaultsettings.txt");
-//					writeFile(plus.io.PUBLIC_DOCUMENTS,"defaultsettings.txt",tempStr);
-//					readFileContent(plus.io.PUBLIC_DOCUMENTS, "defaultsettings.txt");
-//					convertJsonStr("");
+					//					var tempStr = '{"statOptions":{"isNeed24s":false,"isNeedOvertime":false,"isNeedRate":false,"isFreeThrow":false,"isNeedPersonal":false},"gameRules":{"type":"fiba","totalSections":4,"timePerSection":10,"timeOvertime":5,"playersOnCourt":5,"foulOutCount":6},"teamInfos":{"teamNameHome":"主队","teamCodeHome":"NULL","playerCountsHome":"8","teamNameGuest":"客队","teamCodeGuest":"NULL","playerCountsGuest":"8"	},"playersInfos":{"Home":[],"Guest":[]}}';
+					//					writeFile(plus.io.PUBLIC_DOCUMENTS,"statSettings/defaultsettings.txt",tempStr);// 这里以后要加入文件夹的写入
+					//					readFileContent(plus.io.PUBLIC_DOCUMENTS, "statSettings/defaultsettings.txt");
+					//					writeFile(plus.io.PUBLIC_DOCUMENTS,"defaultsettings.txt",tempStr);
+					//					readFileContent(plus.io.PUBLIC_DOCUMENTS, "defaultsettings.txt");
+					//					convertJsonStr("");
 				});
 				$("#leagueMatch")[0].addEventListener("tap", function() {
-					var statSettings = '{"statOptions":{"isNeed24s":true,"isNeedOvertime":false,"isNeedRate":true,"isFreeThrow":false,"isNeedPersonal":true},"gameRules":{"type":"fiba","gameCount":"score","totalSections":4,"gameCountPerSection":10,"gameCountOvertime":5,"playersOnCourt":5,"foulOutCount":6,"timeOutCount":10},"teamInfos":{"teamNameHome":"主队","teamCodeHome":"","playerCountsHome":6,"teamNameGuest":"客队","teamCodeGuest":"","playerCountsGuest":6},"playersInfos":{"home":[{"code":"x","no":1,"name":"owngame"},{"code":"x","no":2,"name":"owngame2"},{"code":"x","no":3,"name":"owngame3"},{"code":"x","no":5,"name":"匿名0"},{"code":"x","no":15,"name":"匿名1"},{"code":"x","no":10,"name":"匿名2"},{"code":"x","no":7,"name":"匿名3"},{"code":"x","no":9,"name":"匿名4"}],"guest":[{"code":"x","no":3,"name":"匿名0"},{"code":"x","no":4,"name":"匿名1"},{"code":"x","no":5,"name":"匿名2"},{"code":"x","no":6,"name":"匿名3"},{"code":"x","no":7,"name":"匿名4"},{"code":"x","no":8,"name":"匿名5"},{"code":"x","no":9,"name":"匿名6"},{"code":"x","no":10,"name":"匿名7"},{"code":"x","no":13,"name":"匿名0"}]}}';
-					myStorageHandler_setItem("lastSettings", statSettings);
+					console.log("leagueMatch!");
+					var statSettings = '{"statOptions":{"isNeedOffensiveTimeLimit":true,"isNeedOvertime":false,"isNeedRate":true,"isShotOnly":false,"isCountFoul":true,"isFreeThrow":false,"isNeedPersonal":true},"gameRules":{"type":"fiba","gameCount":"time","totalSections":4,"gameCountPerSection":10,"gameCountOvertime":5,"firstOffensiveTimeLimit":24,"secondOffensiveTimeLimit":14,"playersOnCourt":5,"foulOutCount":6,"foulsPersection":4,"timeOutCount":10},"teamInfos":{"teamNameHome":"主队","teamCodeHome":"","playerCountsHome":6,"teamNameGuest":"客队","teamCodeGuest":"","playerCountsGuest":6},"playersInfos":{"home":[{"code":"x","no":1,"name":"owngame"},{"code":"x","no":2,"name":"owngame2"},{"code":"x","no":3,"name":"owngame3"},{"code":"x","no":5,"name":"匿名0"},{"code":"x","no":15,"name":"匿名1"},{"code":"x","no":10,"name":"匿名2"},{"code":"x","no":7,"name":"匿名3"},{"code":"x","no":9,"name":"匿名4"}],"guest":[{"code":"x","no":3,"name":"匿名0"},{"code":"x","no":4,"name":"匿名1"},{"code":"x","no":5,"name":"匿名2"},{"code":"x","no":6,"name":"匿名3"},{"code":"x","no":7,"name":"匿名4"},{"code":"x","no":8,"name":"匿名5"},{"code":"x","no":9,"name":"匿名6"},{"code":"x","no":10,"name":"匿名7"},{"code":"x","no":13,"name":"匿名0"}]}}';
+					myStorageHandler_setItem("defaultSettings", statSettings);
 				});
 				$("#nearbyGame")[0].addEventListener("tap", function() {
-//					console.log("what the fuck.");
+					//					console.log("what the fuck.");
 					myStorageHandler_getItem("lastSettings");
 				});
-				
+				$("#news")[0].addEventListener("tap", function() {
+					console.log("tap news.");
+					testAAjax();
+				});
+
 			});
 		</script>
 	</head>
@@ -44,8 +49,27 @@
 		<div class="mui-bar mui-bar-tab" style="height:20px;line-height:20px;font-size:10px;text-align:center;">
 			版权所有-龙生(Owngame)|私人出品
 			<br> 交流请留言
-			<a href="mailto:1003919353@qq.com">1003919353@qq.com</a>或<a href="tel:18107436127"> 致电</a>
+			<a href="mailto:1003919353@qq.com">1003919353@qq.com</a>或
+			<a href="tel:18107436127"> 致电</a>
 		</div>
+		<div id="gameCodePopover" class="mui-popover">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell" style="background:#FBA">
+					<font size="5"><b>是否有比赛代码？</b></font>
+					<br/> 比赛代码可以确定一场唯一的比赛，输入完成后可以自动设置比赛统计规则，省去你的麻烦。
+				</li>
+				<li class="mui-table-view-cell">
+					<input type="text" id="gameCodeInPopover" placeholder="在这里输入比赛代码">
+				</li>
+				<li class="mui-table-view-cell" style="background:#CDE">
+					<a href="#" onclick="isCheckGameCode(true)">完成，去验证设置</a>
+				</li>
+				<li class="mui-table-view-cell" style="background:#CCC">
+					<a href="#" onclick="isCheckGameCode(false)">没有代码，自行设置</a>
+				</li>
+			</ul>
+		</div>
+		<div id="hoverOfGameCodePopover"></div>
 		<div class="mui-content">
 			<ul class="mui-table-view mui-grid-view mui-grid-9">
 				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
@@ -89,7 +113,7 @@
 					</a>
 				</li>
 				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-					<a href="#">
+					<a id="news">
 						<span class="mui-icon">
 							<img src="img/icons/news.png" />
 	    			</span>

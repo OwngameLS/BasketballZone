@@ -10,10 +10,14 @@
 		<script src="js/jquery.min.js"></script>
 		<script src="js/gamestatscript.js"></script>
 		<script src="js/utils.js"></script>
+		<script src="js/uiscript.js"></script>
 		<script type="text/javascript" charset="UTF-8">
 			mui.init();
 			mui.plusReady(function() {
 				initGame();
+				$("#shareGame")[0].addEventListener("tap", function() {
+					shareGame();
+				});
 			});
 		</script>
 	</head>
@@ -21,44 +25,47 @@
 	<body>
 		<header class="mui-bar mui-bar-nav" style="background: #EC971F;">
 			<h1 class="mui-title">比赛代码：XXXX-XXXX</h1>
+			<a id="shareGame" class="mui-btn mui-btn-primary  mui-btn-outlined  mui-pull-right">分享</a>
 		</header>
-		<div id="popover" class="mui-popover">
+		<div id="myPopover" class="mui-popover" style="text-align:center"><!--用来展示弹出菜单的popover-->
 		</div>
 		<div class="mui-content">
 			<table align="center" width="100%">
 				<tr>
-					<td width="15%">
+					<td width="25%">
 						<div class="mui-content-padded">
-							<h3 id="currentSection"></h3>
+							<b><label id="currentSection"></label></b>
 							<button id="nextSection" onclick="nextSection()" class="mui-btn" style="display: none;">下一节</button>
 						</div>
 					</td>
-					<td width="25%">
+					<td width="40%" id="timeTD">
 						<div class="mui-content-padded">
-							<h3>时间</h3>
-							<h1 id="gametime" style="color: red;"></h1>
+							<b><label id="gameCountLabel">时间</label><b><br>
+							<font size="5" id="gameCount" style="color: red;"></font>
 						</div>
 					</td>
-					<td width="10%">
-						<button id="controlgameTime" onclick="controlGameTime()" type="button" class="mui-btn">开始</button>
-						<button type="button" class="mui-btn">手动设置</button>
+					<td width="10%" id="timeControl">
+						<button id="controlgameTime" onclick="controlGameTime()" class="mui-btn">开始计时</button>
+						<button type="button" onclick="setGameTime()" class="mui-btn">手动设置</button>
 					</td>
-					<td id="24sShow1" width="25%">
+					<td id="OffensiveShow1" width="20%">
 						<div class="mui-content-padded">
-							<h3>进攻时限</h3>
-							<h1 id="offensivetime" style="color: red;">24s</h1>
+							<b>进攻时限</b>
+							<font size="5" id="offensivetime" style="color: red;">24s</font>
 						</div>
 					</td>
-					<td id="24sShow2" width="15%">
-						<button onclick="reset24s()" type="button" class="mui-btn">24s</button>
-						<button onclick="reset14s()" type="button" class="mui-btn">14s</button>
+					<td id="OffensiveShow2" width="5%">
+						<button onclick="setOffensiveTimeLimit(true,0)" type="button" class="mui-btn" id="offensiveTimeLimitBT">24s</button>
+						<button onclick="setOffensiveTimeLimit(false,0)" type="button" class="mui-btn" id="resetoffensiveTimeLimitBT">14s</button>
 					</td>
 				</tr>
+			</table>
+			<table align="center" width="100%">
 				<tr>
 					<td width="15%">
 						<div class="mui-content-padded">
 							<h3>Home</h3>
-							<h3 id="homename"></h3>
+							<label id="homename"></label>
 						</div>
 					</td>
 					<td width="25%">
@@ -77,8 +84,25 @@
 					<td width="15%">
 						<div class="mui-content-padded">
 							<h3>Guest</h3>
-							<h3 id="guestname"></h3>
+							<label id="guestname"></label>
 						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						本节得分：
+					</td>
+					<td id="currentSectionScoreHome">
+						0
+					</td>
+					<td>
+						<img src='img/arrow_l.png' onclick="changeArrowDirection()" id="offensiveDirection"/>
+					</td>
+					<td id="currentSectionScoreGuest">
+						0
+					</td>
+					<td>
+						
 					</td>
 				</tr>
 			</table>
@@ -115,39 +139,43 @@
 				</tr>
 			</table>
 			<br>
+			<div id="FoulCountDIV">
 			<h3>犯规：</h3>
 			<table align="center" width="100%">
 				<tr>
-					<td width="15%">
-						<h4>本节累计：</h4>
+					<td>
+						<h4>本节：</h4>
 					</td>
 					<td id="cursecFoulsHome">
 						0
 					</td>
-					<td width="15%">
-						<button type="button" onclick="addSTAT(0, 'FOUL', 'notNeed')" class="mui-btn mui-btn-primary">防守犯规</button>
+					<td>
+						<button type="button" onclick="addSTAT(0, 'FOUL', 'notNeed')" class="mui-btn mui-btn-primary">防守</button>
 					</td>
-					<td width="15%">
-						<button type="button" onclick="addSTAT(0, 'FOUL', 'OFFENSIVE')" class="mui-btn mui-btn-success">进攻犯规</button>
+					<td>
+						<button type="button" onclick="addSTAT(0, 'FOUL', 'OFFENSIVE')" class="mui-btn mui-btn-success">进攻</button>
 					</td>
 					<td width="1%" bgcolor="#000000">
 
 					</td>
-					<td width="15%">
-						<h4>本节累计：</h4>
+					<td>
+						<h4>本节：</h4>
 					</td>
 					<td id="cursecFoulsGuest">
 						0
 					</td>
-					<td width="15%">
-						<button type="button" onclick="addSTAT(1, 'FOUL', 'notNeed')" class="mui-btn mui-btn-primary">防守犯规</button>
+					<td>
+						<button type="button" onclick="addSTAT(1, 'FOUL', 'notNeed')" class="mui-btn mui-btn-primary">防守</button>
 					</td>
-					<td width="15%">
-						<button type="button" onclick="addSTAT(1, 'FOUL', 'OFFENSIVE')" class="mui-btn mui-btn-success">进攻犯规</button>
+					<td>
+						<button type="button" onclick="addSTAT(1, 'FOUL', 'OFFENSIVE')" class="mui-btn mui-btn-success">进攻</button>
 					</td>
 				</tr>
 			</table>
+			</div>
 			<br />
+			<div id="hoverOfPlayerSelectPopover"></div>
+			<div id="otherTechDIV">
 			<h3 id="otherTech">其他技术：</h3>
 			<table width="100%">
 				<td width="15%">
@@ -177,6 +205,28 @@
 					<button type="button" onclick="addSTAT(1, 'TO', 'notNeed')" class="mui-btn mui-btn-danger">失 误</button>
 				</td>
 			</table>
+			</div>
+			<div id="substituteDIV">
+			<h3>人员替换：</h3>
+			<table width="100%">
+				<td width="15%">
+					<button type="button" onclick="substitutePlayer(0)" class="mui-btn mui-btn-primary">换人</button>
+				</td>
+				<td width="15%">
+				</td>
+				<td width="15%">
+				</td>
+				<td width="1%" bgcolor="#000000">
+				</td>
+				<td width="15%">
+				</td>
+				<td width="15%">
+				</td>
+				<td width="15%">
+					<button type="button" onclick="substitutePlayer(1)" class="mui-btn mui-btn-warning">换人</button>
+				</td>
+			</table>
+			</div>
 			<h3>详细技术统计：</h3>
 			<table id="stats" align="center" width="100%" border="1">
 

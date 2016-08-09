@@ -5,10 +5,17 @@
 // 设置成功了就会有一个key为lastsettings的值
 // 如果从远端下载了就会有一个key为xxx-settings的值（xxx为比赛代码）
 {
+	"gameInfos":{
+		"code":"",
+		"name":"",
+		"discription":""
+	},
 	"statOptions":{// 统计选项
-		"isNeed24s" : false,
+		"isNeedOffensiveTimeLimit" : false,
 		"isNeedOvertime" : false,
 		"isNeedRate" : false,
+		"isShotOnly" : false,
+		"isCountFoul" : true,
 		"isFreeThrow" : false,
 		"isNeedPersonal" : false
 	},
@@ -18,8 +25,11 @@
 		"totalSections" : 4,
 		"gameCountPerSection" : 10,
 		"gameCountOvertime" : 5,
+		"firstOffensiveTimeLimit" : 24,
+		"secondOffensiveTimeLimit" : 14,
 		"playersOnCourt" : 5,
 		"foulOutCount" : 6,
+		"foulsPersection" : 4,
 		"timeOutCount" : 10
 	},
 	"teamInfos" : {// 球队细节
